@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "862380250955",
+    "firebase_url": "https://medifinddb.firebaseio.com",
+    "project_id": "medifinddb",
+    "storage_bucket": "medifinddb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862380250955:android:a47037847c4ed94c7c7ace",
+        "android_client_info": {
+          "package_name": "com.example.medifind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862380250955-iiif1cfivjf0akn2vjtpddllqdtkbplp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.medifind",
+            "certificate_hash": "ef9c8a9cd928aeb95ba9f8c132c438785fbcefd5"
+          }
+        },
+        {
+          "client_id": "862380250955-ms6lm22gapghqu9aqdh0js2tj50lqile.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgzp_3t-4s9trzJ8GbwXXPSIb1anJS014"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862380250955-ms6lm22gapghqu9aqdh0js2tj50lqile.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862380250955:android:dedad341255cfdb17c7ace",
+        "android_client_info": {
+          "package_name": "com.shehack.medifind"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "862380250955-ms6lm22gapghqu9aqdh0js2tj50lqile.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgzp_3t-4s9trzJ8GbwXXPSIb1anJS014"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "862380250955-ms6lm22gapghqu9aqdh0js2tj50lqile.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
