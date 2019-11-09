@@ -49,10 +49,10 @@ public class ResultsActivity extends AppCompatActivity {
         list_main = (ListView) findViewById(R.id.list_main);
 
         Intent i = getIntent();
-        //final String med_name = i.getStringExtra("res2");
-        //final String contains = i.getStringExtra("res1");
-        final String med_name = "crocin";
-        final String contains = "paracetamol";
+        final String med_name = i.getStringExtra("res2");
+        final String contains = i.getStringExtra("res1");
+        //final String med_name = "crocin";
+        //final String contains = "paracetamol";
 
         addListenerOnSpinnerItemSelection();
 
