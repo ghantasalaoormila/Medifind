@@ -28,11 +28,23 @@
             android:layout_marginLeft="250dp"
             android:paddingLeft="20dp"/>
 
+        <TextView
+            android:id="@+id/usesTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:text="Search Results"
+            android:layout_below="@id/spinner_sort"
+            android:textSize="20dp">
+        </TextView>
+
+
         <ListView
                 android:id="@+id/list_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/spinner_sort"
+                android:layout_below="@id/usesTV"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="15dp">
 

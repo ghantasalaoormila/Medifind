@@ -10,6 +10,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class BuyActivity extends AppCompatActivity {
 
     String seller;
@@ -26,6 +28,8 @@ public class BuyActivity extends AppCompatActivity {
     ImageButton plus_btn;
     TextView quantityTV;
     Button placeorder_btn;
+    private static DecimalFormat df = new DecimalFormat("0.00");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,16 +96,16 @@ public class BuyActivity extends AppCompatActivity {
 
     void setTotalPrice(TextView view){
         double total_price = this.price*this.quantity;
-        view.setText(""+total_price);
+        view.setText(""+df.format(total_price));
     }
 
     void setDiscount(TextView view){
         double discount = this.discount*this.price*this.quantity*0.01;
-        view.setText("-"+discount);
+        view.setText("-"+df.format(discount));
     }
 
     void setNetPayable(TextView view){
         double net_pay = this.price*this.quantity-this.discount*this.price*this.quantity*0.01;
-        view.setText(""+net_pay);
+        view.setText(""+df.format(net_pay));
     }
 }

@@ -43,6 +43,8 @@ public class ResultsActivity extends AppCompatActivity {
     TextView search_results;
     TextView other_results;
     View line_view;
+    String use;
+    TextView usesTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +57,15 @@ public class ResultsActivity extends AppCompatActivity {
         other_results = (TextView) findViewById(R.id.alt_med_head);
         sort_spinner = (Spinner) findViewById(R.id.spinner_sort);
         line_view = (View) findViewById(R.id.line_view);
+        usesTV = (TextView) findViewById(R.id.usesTV);
+        use = "";
 
 
         search_results.setVisibility(View.INVISIBLE);
         other_results.setVisibility(View.INVISIBLE);
         sort_spinner.setVisibility(View.INVISIBLE);
         line_view.setVisibility(View.INVISIBLE);
+        usesTV.setVisibility(View.INVISIBLE);
 
 
         Intent i = getIntent();
@@ -126,6 +131,9 @@ public class ResultsActivity extends AppCompatActivity {
                                                     sort_spinner.setVisibility(View.VISIBLE);
                                                     search_results.setVisibility(View.VISIBLE);
                                                     line_view.setVisibility(View.VISIBLE);
+                                                    use = uses;
+                                                    usesTV.setText("Uses : " + use);
+                                                    usesTV.setVisibility(View.VISIBLE);
                                                     Log.d("ResultsActMeds", main_meds.toString());
                                                     createMainListAdapter();
 
@@ -155,7 +163,7 @@ public class ResultsActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()) {
                                             for (final QueryDocumentSnapshot document : task.getResult()) {
-                                                if (!document.get("Name").equals(med_name)) {
+                                                if (!document.get("Name").equals(med_name)){
                                                     ArrayList<String> Sellers = (ArrayList<String>) document.get("Sellers");
                                                     for (int i = 0; i < Sellers.size(); i++) {
 
@@ -186,6 +194,11 @@ public class ResultsActivity extends AppCompatActivity {
                                                                         alt_meds.add(new Medicine(seller_id, med_id, med_name, seller, manufactured_by, contents, dosage, price, type, rating, location, discount, open_time, close_time, uses));
                                                                         other_results.setVisibility(View.VISIBLE);
                                                                         sort_spinner.setVisibility(View.VISIBLE);
+                                                                        if(use.equals("")){
+                                                                            use = uses;
+                                                                            usesTV.setText("Uses : " + use);
+                                                                            usesTV.setVisibility(View.VISIBLE);
+                                                                        }
                                                                         createAltListAdapter();
 
                                                                         Log.d("Results Activity", "DocumentSnapshot data: " + seller_document.getData());

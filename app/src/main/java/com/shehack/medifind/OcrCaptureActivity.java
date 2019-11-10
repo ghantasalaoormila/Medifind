@@ -129,7 +129,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         Snackbar.make(graphicOverlay, "Tap to select text for search and Speak. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
+                Snackbar.LENGTH_LONG).setDuration(6000)
                 .show();
 
         // Set up the Text To Speech engine.
@@ -377,11 +377,11 @@ public final class OcrCaptureActivity extends AppCompatActivity {
                     min_content_name = med_contents.get(j);
                 }
             }
-            Toast.makeText(getApplicationContext(), min_content_name +" "+ min_content_dist+ " , " + min_med_name + " " + min_med_dist, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), min_content_name +" "+ min_content_dist+ " , " + min_med_name + " " + min_med_dist, Toast.LENGTH_SHORT).show();
 
-            if (min_content_dist > min_med_dist && min_content_dist>0.8) {
+            if (min_content_dist > min_med_dist && min_content_dist>0.7) {
                 res = min_content_name;
-            } else if(min_med_dist>0.8) res = min_med_name;
+            } else if(min_med_dist>0.7) res = min_med_name;
 
             if(i==0 && res!=null) intent.putExtra("res1", res.toLowerCase());
             else if(i==1 && res!=null) intent.putExtra("res2", res.toLowerCase());
