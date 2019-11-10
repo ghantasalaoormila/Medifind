@@ -47,7 +47,7 @@
         <activity
             android:name=".ResultsActivity"
             android:parentActivityName=".OcrCaptureActivity" />
-        <activity android:name=".BuyActivity" />
+        <activity android:name=".BuyActivity" android:label="Cart"/>
         <activity
             android:name=".HomeActivity"
             android:label="@string/title_activity_home" /> <!-- android:theme="@style/AppTheme.NoActionBar"></activity> -->
