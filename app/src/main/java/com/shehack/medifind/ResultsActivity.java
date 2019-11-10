@@ -77,7 +77,6 @@ public class ResultsActivity extends AppCompatActivity {
             search_results.setVisibility(View.VISIBLE);
         }
 
-
         //final String med_name = "crocin";
         //final String contains = "paracetamol";
 
