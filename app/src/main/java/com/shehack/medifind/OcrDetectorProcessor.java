@@ -93,7 +93,7 @@ public class OcrDetectorProcessor implements Detector.Processor<TextBlock> {
                 graphicOverlay.add(graphic);
             }
         }
-        if(max_val>10){
+        if(max_val>100){
             Set<Map.Entry<String, Integer>> entries = map.entrySet();
 
             Comparator<Map.Entry<String, Integer>> valueComparator = new Comparator<Map.Entry<String,Integer>>() {

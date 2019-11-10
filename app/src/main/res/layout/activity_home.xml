@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
+    <ImageView
+        android:id="@+id/imageView_wallet"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="220dp"
+        android:layout_marginVertical="150dp"
+        android:tooltipText="Wallet"
+        app:srcCompat="@mipmap/ic_wallet" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,13 +22,13 @@
 
         <SearchView
             android:id="@+id/search_label"
-            android:queryHint="Search Here"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#74BD1E" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:autofillHints="Search Here"
+            android:background="#fff"
+            android:queryHint="Search Here" />
 
-    <include layout="@layout/content_home" />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -27,6 +36,35 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        android:background="#DD20A7"
+        app:srcCompat="@android:drawable/ic_menu_camera"/>
+
+    <ImageView
+        android:id="@+id/imageView_profile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginVertical="150dp"
+        android:tooltipText="Profile"
+        app:srcCompat="@mipmap/ic_profile" />
+
+    <ImageView
+        android:id="@+id/imageView_track"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginVertical="310dp"
+        android:tooltipText="Directions"
+        app:srcCompat="@mipmap/ic_track" />
+
+    <ImageView
+        android:id="@+id/imageView_notif"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginHorizontal="220dp"
+        android:layout_marginVertical="310dp"
+        android:tooltipText="Notifications"
+        app:srcCompat="@mipmap/ic_notify" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

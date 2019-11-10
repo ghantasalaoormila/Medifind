@@ -1,80 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <LinearLayout android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/details_1"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:id="@+id/seller"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
             android:padding="2dp"
-            android:textColor="#4d4d4d" />
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#4d4d4d"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/med_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="TextView"
-            android:layout_marginLeft="10dp"/>
+            android:layout_below="@+id/seller"/>
 
         <TextView
             android:id="@+id/manufactured_by"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="TextView"
-            android:layout_marginLeft="10dp"/>
-
-        <TextView
-            android:id="@+id/contents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_marginLeft="10dp"/>
+            android:layout_below="@+id/med_name"/>
 
         <TextView
             android:id="@+id/dosage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="TextView"
-            android:layout_marginLeft="10dp"/>
+            android:layout_below="@+id/manufactured_by"/>
+
+        <TextView
+            android:id="@+id/contents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="TextView"
+            android:layout_below="@+id/dosage"/>
 
         <TextView
             android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="TextView"
-            android:layout_marginLeft="10dp"/>
+            android:textStyle="bold"
+            android:layout_below="@+id/contents"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/dis_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="TextView"
+            android:layout_toRightOf="@id/price"
+            android:textStyle="bold"
+            android:layout_below="@+id/contents"
+            android:textColor="@android:color/holo_green_light"/>
 
-    <LinearLayout
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/details_1"
         android:orientation="vertical"
-        android:layout_marginRight="20dp">
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/closeTimeTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:text="Opens At"
+            android:textColor="@android:color/holo_green_light"
+            />
 
         <TextView
             android:id="@+id/rating"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="100dp"
+            android:layout_below="@+id/closeTimeTV"
+            android:textColor="@android:color/holo_green_light"
+            android:text="3.2"
+            />
+
+        <TextView
+            android:id="@+id/rating_star"
+            android:layout_width="20dp"
+            android:layout_below="@+id/closeTimeTV"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
-            android:layout_marginTop="5dp"
-            android:text="TextView" />
+            android:textColor="@android:color/holo_green_light"
+            android:layout_toRightOf="@+id/rating"
+            android:text="@string/star" />
+
+
+        <ImageButton
+            android:id="@+id/dir_btn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/rating_star"
+            android:layout_marginLeft="100dp"
+            app:srcCompat="@android:drawable/ic_menu_directions"
+            android:background="#fff"/>
 
         <TextView
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/dir_btn"
             android:layout_marginLeft="80dp"
             android:text="TextView" />
 
@@ -82,11 +136,14 @@
             android:id="@+id/buy_button"
             android:layout_width="60dp"
             android:layout_height="35dp"
+            android:layout_below="@+id/distance"
             android:layout_marginLeft="80dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:text="Buy" />
+            android:background="#DD20A7"
+            android:text="Buy"
+            android:textColor="@android:color/white"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

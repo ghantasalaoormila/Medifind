@@ -79,7 +79,16 @@ public class HomeActivity extends AppCompatActivity {
                                             min_content_name = med_contents.get(i);
                                         }
                                     }
-                                    Toast.makeText(getApplicationContext(), min_content_name +" "+ min_content_dist+ " , " + min_med_name + " " + min_med_dist, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getApplicationContext(), min_content_name +" "+ min_content_dist+ " , " + min_med_name + " " + min_med_dist, Toast.LENGTH_SHORT).show();
+                                    String res = null;
+                                    if(min_content_dist>min_med_dist && min_content_dist>0.8){
+                                        res = min_content_name;
+                                    }
+                                    else if(min_med_dist>0.8) res = min_med_name;
+                                    Intent intent = new Intent(HomeActivity.this,ResultsActivity.class);
+                                    if(res!=null) intent.putExtra("res1",res.toLowerCase());
+                                    if(res!=null) intent.putExtra("res2",res.toLowerCase());
+                                    startActivity(intent);
 
                                 } else {
                                     Log.d("HomeActivity", "Error getting documents: ", task.getException());

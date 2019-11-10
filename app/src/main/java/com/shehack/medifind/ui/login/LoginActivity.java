@@ -34,9 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = getSharedPreferences("MyPref", 0);
+
         setContentView(R.layout.activity_login);
 
-        prefs = getSharedPreferences("com.shehack.medifind", MODE_PRIVATE);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
@@ -118,31 +120,19 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("isLoggedIn",true);
+                editor.commit();
                 Intent i = new Intent(LoginActivity.this, MapsActivity.class);
                 startActivity(i);
             }
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (prefs.getBoolean("firstrun", true)) {
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).commit();
-        }
-        else{
-            Intent i = new Intent(LoginActivity.this, MapsActivity.class);
-            startActivity(i);
-        }
-    }
-
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {

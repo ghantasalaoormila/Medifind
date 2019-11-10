@@ -44,14 +44,22 @@ import androidx.core.app.ActivityCompat;
 //import com.example.medifind.ui.camera.GraphicOverlay;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.shehack.medifind.ui.camera.CameraSource;
 import com.shehack.medifind.ui.camera.CameraSourcePreview;
 import com.shehack.medifind.ui.camera.GraphicOverlay;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 //import android.support.annotation.NonNull;
@@ -120,7 +128,7 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(graphicOverlay, "Tap to Speak. Pinch/Stretch to zoom",
+        Snackbar.make(graphicOverlay, "Tap to select text for search and Speak. Pinch/Stretch to zoom",
                 Snackbar.LENGTH_LONG)
                 .show();
 
@@ -343,6 +351,47 @@ public final class OcrCaptureActivity extends AppCompatActivity {
         }
     }
 
+
+    public void ProcessText(ArrayList<String> med_names,ArrayList<String> med_contents,String[] lines){
+        Intent intent = new Intent(OcrCaptureActivity.this, ResultsActivity.class);
+        String res = null;
+        for(int i=0;i<lines.length;i++) {
+            double min_med_dist = Integer.MIN_VALUE;
+            String min_med_name = null;
+            Log.d("HomeActivity", "Getting dist " + med_names);
+            for (int j = 0; j < med_names.size(); j++) {
+                double dist = StringUtils.getJaroWinklerDistance(lines[i], med_names.get(j));
+                Log.d("HomeActivity", "Getting dist " + dist);
+                if (dist > min_med_dist) {
+                    min_med_dist = dist;
+                    min_med_name = med_names.get(j);
+                }
+            }
+            double min_content_dist = Integer.MIN_VALUE;
+            String min_content_name = null;
+            for (int j = 0; j < med_contents.size(); j++) {
+                double dist = StringUtils.getJaroWinklerDistance(lines[i], med_contents.get(j));
+                Log.d("HomeActivity", "Getting dist " + dist);
+                if (dist > min_content_dist) {
+                    min_content_dist = dist;
+                    min_content_name = med_contents.get(j);
+                }
+            }
+            Toast.makeText(getApplicationContext(), min_content_name +" "+ min_content_dist+ " , " + min_med_name + " " + min_med_dist, Toast.LENGTH_SHORT).show();
+
+            if (min_content_dist > min_med_dist && min_content_dist>0.8) {
+                res = min_content_name;
+            } else if(min_med_dist>0.8) res = min_med_name;
+
+            if(i==0 && res!=null) intent.putExtra("res1", res.toLowerCase());
+            else if(i==1 && res!=null) intent.putExtra("res2", res.toLowerCase());
+        }
+        if(lines.length==1 && res!=null) intent.putExtra("res1", res.toLowerCase());
+        startActivity(intent);
+
+    }
+
+
     /**
      * onTap is called to speak the tapped TextBlock, if any, out loud.
      *
@@ -359,12 +408,35 @@ public final class OcrCaptureActivity extends AppCompatActivity {
                 Log.d(TAG, "text data is being spoken! " + text.getValue());
                 // Speak the string.
                 String res = text.getValue();
-                String[] lines = res.split("\\r?\\n");
+                final String[] lines = res.split("\\r?\\n");
                 tts.speak(text.getValue(), TextToSpeech.QUEUE_ADD, null, "DEFAULT");
-                Intent intent = new Intent(this,ResultsActivity.class).putExtra("res1",lines[0].toLowerCase());
-                if(lines.length>1)  intent.putExtra("res2",lines[1].toLowerCase());
-                else intent.putExtra("res2",lines[0].toLowerCase());
-                startActivity(intent);
+
+                FirebaseFirestore db;
+                final ArrayList<String> med_names;
+                final ArrayList<String> med_contents;
+
+                db = FirebaseFirestore.getInstance();
+                med_names = new ArrayList<String>();
+                med_contents = new ArrayList<String>();
+
+                db.collection("Medicines")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        Log.d("HomeActivity", document.getId() + " => " + document.getData());
+                                        med_names.add(document.getString("Name"));
+                                        med_contents.add(document.getString("Contains"));
+                                    }
+                                    ProcessText(med_names,med_contents,lines);
+                                } else {
+                                    Log.d("HomeActivity", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
             }
             else {
                 Log.d(TAG, "text data is null");

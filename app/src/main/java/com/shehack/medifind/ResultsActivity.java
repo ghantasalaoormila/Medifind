@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,9 @@ public class ResultsActivity extends AppCompatActivity {
     ArrayList<Medicine> alt_meds;
     Spinner sort_spinner;
     static SharedPreferences pref;
+    TextView search_results;
+    TextView other_results;
+    View line_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,18 +51,37 @@ public class ResultsActivity extends AppCompatActivity {
 
         list_alt = (ListView) findViewById(R.id.list_alt);
         list_main = (ListView) findViewById(R.id.list_main);
+        search_results = (TextView) findViewById(R.id.med_head);
+        other_results = (TextView) findViewById(R.id.alt_med_head);
+        sort_spinner = (Spinner) findViewById(R.id.spinner_sort);
+        line_view = (View) findViewById(R.id.line_view);
+
+
+        search_results.setVisibility(View.INVISIBLE);
+        other_results.setVisibility(View.INVISIBLE);
+        sort_spinner.setVisibility(View.INVISIBLE);
+        line_view.setVisibility(View.INVISIBLE);
+
 
         Intent i = getIntent();
         final String med_name = i.getStringExtra("res2");
         final String contains = i.getStringExtra("res1");
+
+        if(med_name==null && contains==null){
+            search_results.setText("No Results Found");
+            search_results.setVisibility(View.VISIBLE);
+        }
+
+
         //final String med_name = "crocin";
         //final String contains = "paracetamol";
 
+        else{
         addListenerOnSpinnerItemSelection();
 
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
-        Log.d("ResAct",med_name + " " + contains);
+        Log.d("ResAct", med_name + " " + contains);
 
         db = FirebaseFirestore.getInstance();
         main_meds = new ArrayList<Medicine>();
@@ -70,10 +93,10 @@ public class ResultsActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (final QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (final QueryDocumentSnapshot document : task.getResult()) {
                                 ArrayList<String> Sellers = (ArrayList<String>) document.get("Sellers");
-                                for(int i=0;i<Sellers.size();i++) {
+                                for (int i = 0; i < Sellers.size(); i++) {
 
                                     DocumentReference docRef = db.collection("Sellers").document(Sellers.get(i));
                                     docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -99,7 +122,10 @@ public class ResultsActivity extends AppCompatActivity {
                                                     String open_time = seller_document.getString("OpenTime");
                                                     String uses = document.getString("Uses");
 
-                                                    main_meds.add(new Medicine(seller_id, med_id, med_name, seller, manufactured_by, contents, dosage, price, type, rating, location, discount, close_time, open_time, uses));
+                                                    main_meds.add(new Medicine(seller_id, med_id, med_name, seller, manufactured_by, contents, dosage, price, type, rating, location, discount, open_time, close_time, uses));
+                                                    sort_spinner.setVisibility(View.VISIBLE);
+                                                    search_results.setVisibility(View.VISIBLE);
+                                                    line_view.setVisibility(View.VISIBLE);
                                                     Log.d("ResultsActMeds", main_meds.toString());
                                                     createMainListAdapter();
 
@@ -122,95 +148,66 @@ public class ResultsActivity extends AppCompatActivity {
                             Log.d("Results Activity", "Error getting documents: ", task.getException());
                         }
 
-                            db.collection("Medicines")
-                                    .whereEqualTo("Contains",contains).get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                for(final QueryDocumentSnapshot document : task.getResult()){
-                                                    if(!document.get("Name").equals(med_name)){
-                                                        ArrayList<String> Sellers = (ArrayList<String>) document.get("Sellers");
-                                                        for(int i=0;i<Sellers.size();i++){
+                        db.collection("Medicines")
+                                .whereEqualTo("Contains", contains).get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (final QueryDocumentSnapshot document : task.getResult()) {
+                                                if (!document.get("Name").equals(med_name)) {
+                                                    ArrayList<String> Sellers = (ArrayList<String>) document.get("Sellers");
+                                                    for (int i = 0; i < Sellers.size(); i++) {
 
-                                                            DocumentReference docRef = db.collection("Sellers").document(Sellers.get(i));
-                                                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        DocumentSnapshot seller_document = task.getResult();
-                                                                        if (seller_document.exists()) {
+                                                        DocumentReference docRef = db.collection("Sellers").document(Sellers.get(i));
+                                                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DocumentSnapshot seller_document = task.getResult();
+                                                                    if (seller_document.exists()) {
 
-                                                                            String seller_id = seller_document.getId();
-                                                                            String med_id = document.getId();
-                                                                            String med_name = document.getString("Name");
-                                                                            String seller = seller_document.getString("Name");
-                                                                            String manufactured_by = document.getString("ManufacturedBy");
-                                                                            String contents = document.getString("Contains");
-                                                                            String dosage = document.getString("Dosage");
-                                                                            double price = document.getDouble("Price");
-                                                                            String type = seller_document.getString("Type");
-                                                                            double rating = seller_document.getDouble("Rating");
-                                                                            GeoPoint location = seller_document.getGeoPoint("Location");
-                                                                            double discount = seller_document.getDouble("Discount");
-                                                                            String close_time = seller_document.getString("CloseTime");
-                                                                            String open_time = seller_document.getString("OpenTime");
-                                                                            String uses = document.getString("Uses");
+                                                                        String seller_id = seller_document.getId();
+                                                                        String med_id = document.getId();
+                                                                        String med_name = document.getString("Name");
+                                                                        String seller = seller_document.getString("Name");
+                                                                        String manufactured_by = document.getString("ManufacturedBy");
+                                                                        String contents = document.getString("Contains");
+                                                                        String dosage = document.getString("Dosage");
+                                                                        double price = document.getDouble("Price");
+                                                                        String type = seller_document.getString("Type");
+                                                                        double rating = seller_document.getDouble("Rating");
+                                                                        GeoPoint location = seller_document.getGeoPoint("Location");
+                                                                        double discount = seller_document.getDouble("Discount");
+                                                                        String close_time = seller_document.getString("CloseTime");
+                                                                        String open_time = seller_document.getString("OpenTime");
+                                                                        String uses = document.getString("Uses");
 
-                                                                            alt_meds.add(new Medicine(seller_id,med_id,med_name,seller,manufactured_by,contents,dosage,price,type,rating,location,discount,close_time,open_time,uses));
-                                                                            createAltListAdapter();
+                                                                        alt_meds.add(new Medicine(seller_id, med_id, med_name, seller, manufactured_by, contents, dosage, price, type, rating, location, discount, open_time, close_time, uses));
+                                                                        other_results.setVisibility(View.VISIBLE);
+                                                                        sort_spinner.setVisibility(View.VISIBLE);
+                                                                        createAltListAdapter();
 
-                                                                            Log.d("Results Activity", "DocumentSnapshot data: " + seller_document.getData());
-                                                                        } else {
-                                                                            Log.d("Results Activity", "No such document");
-                                                                        }
+                                                                        Log.d("Results Activity", "DocumentSnapshot data: " + seller_document.getData());
                                                                     } else {
-                                                                        Log.d("Results Activity", "get failed with ", task.getException());
+                                                                        Log.d("Results Activity", "No such document");
                                                                     }
+                                                                } else {
+                                                                    Log.d("Results Activity", "get failed with ", task.getException());
                                                                 }
-                                                            });
-                                                        }
-                                                        Log.d("Results Activity", document.getId() + " => " + document.getData());
+                                                            }
+                                                        });
                                                     }
+                                                    Log.d("Results Activity", document.getId() + " => " + document.getData());
                                                 }
                                             }
                                         }
-                                    });
+                                    }
+                                });
 
                     }
                 });
-
-        list_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Medicine m = main_meds.get(position);
-                String lat_str = pref.getString("location_lat",null); // Storing float
-                String lng_str = pref.getString("location_lng",null);
-
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+lat_str+","+lng_str+"&daddr="+m.location.getLatitude()+","+m.location.getLongitude());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if(mapIntent.resolveActivity(getPackageManager())!=null)
-                    startActivity(mapIntent);
-            }
-        });
-
-        list_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Medicine m = alt_meds.get(position);
-                String lat_str = pref.getString("location_lat",null);// Storing float
-                String lng_str = pref.getString("location_lng",null);
-
-                Uri gmmIntentUri = Uri.parse("http://maps.google.com/maps?saddr="+lat_str+","+lng_str+"&daddr="+m.location.getLatitude()+","+m.location.getLongitude());
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                if(mapIntent.resolveActivity(getPackageManager())!=null)
-                    startActivity(mapIntent);
-
-            }
-        });
+    }
 
     }
 
@@ -227,7 +224,6 @@ public class ResultsActivity extends AppCompatActivity {
     }
 
     void addListenerOnSpinnerItemSelection(){
-        sort_spinner = (Spinner)findViewById(R.id.spinner_sort);
         sort_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
